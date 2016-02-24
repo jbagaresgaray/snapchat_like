@@ -24,7 +24,17 @@
     {
       "locator": "https://github.com/performanceactive/phonegap-custom-camera-plugin.git",
       "id": "com.performanceactive.plugins.camera"
+    },
+    {
+      "locator": "https://github.com/wkevina/okstate-plugin-camera-overlay.git",
+      "id": "okstate-plugin-camera-overlay"
+    },
+    {
+      "locator": "https://github.com/kmturley/cordova-plugin-media-custom.git",
+      "id": "cordova-plugin-media-custom"
     }
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "android"
+  ]
 }
