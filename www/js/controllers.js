@@ -1,53 +1,24 @@
 angular.module('starter.controllers', [])
     .controller('LoginCtrl', function($scope, $window, $timeout, $sce) {
 
-        function getPhoneGapPath() {
-            var path = window.location.pathname;
-            path = path.substr(path, path.length - 10);
-            return 'file://' + path;
-        }
-
-        var video = document.getElementById('video'),
-            output = document.getElementById('output');
-
-        $scope.videourl = $sce.trustAsResourceUrl(getPhoneGapPath() + 'img/big_buck_bunny.mp4');
-
-        video.addEventListener('loadeddata', function(e) {
-            // for some reason we need a delay to successfully retrieve metadata
-            $timeout(function() {
-                output.innerHTML += 'src = ' + e.target.src + '<br/>';
-                output.innerHTML += 'duration = ' + e.target.duration + '<br/>';
-                output.innerHTML += 'videoWidth = ' + e.target.videoWidth + '<br/>';
-                output.innerHTML += 'videoHeight = ' + e.target.videoHeight + '<br/>';
-            }, 200);
-        });
-
-
         $scope.takepic = function() {
-            if ($window.MediaCustom) {
-                $window.MediaCustom.show(function(data) {
-                    video.src = data;
-                    $window.MediaCustom.hide();
-                }, function(e) {
-                    //window.alert('MediaCustom.error: ' + JSON.stringify(e));
-                    $window.MediaCustom.hide();
-                    navigator.camera.getPicture(function(data) {
-                        //window.alert('getPicture.success: ' + JSON.stringify(data));
-                        video.src = data;
-                    }, function(e) {
-                        $window.alert('getPicture.error: ' + JSON.stringify(e));
-                    }, {
-                        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-                        mediaType: Camera.MediaType.VIDEO,
-                        destinationType: Camera.DestinationType.FILE_URI
-                    });
+            navigator.customCamera.getPicture("latest_scan.png",
+                function(imagePath) {
+                    alert("File path: " + imagePath);
+                    $timeout(function() {
+                        $scope.$apply(function() {
+                            $scope.imagePath = imagePath;
+                        });
+                    }, 100);
+                },
+                function(error) {
+                    alert(error);
+                }, {
+                    quality: 100,
+                    targetWidth: 1000,
+                    targetHeight: 1000
                 });
-            } else {
-                $window.alert('MediaCustom feature not supported');
-            }
         };
-
-
 
     })
     .controller('DashCtrl', function($scope) {})

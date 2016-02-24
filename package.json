@@ -28,10 +28,6 @@
     {
       "locator": "https://github.com/wkevina/okstate-plugin-camera-overlay.git",
       "id": "okstate-plugin-camera-overlay"
-    },
-    {
-      "locator": "https://github.com/kmturley/cordova-plugin-media-custom.git",
-      "id": "cordova-plugin-media-custom"
     }
   ],
   "cordovaPlatforms": [
