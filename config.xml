@@ -22,8 +22,6 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
-    <plugin name="com.performanceactive.plugins.camera" spec="https://github.com/performanceactive/phonegap-custom-camera-plugin.git" />
-    <plugin name="okstate-plugin-camera-overlay" spec="https://github.com/wkevina/okstate-plugin-camera-overlay.git" />
     <platform name="android">
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -44,4 +42,5 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
+    <plugin name="com.mbppower.camerapreview" spec="https://github.com/mbppower/CordovaCameraPreview.git" />
 </widget>

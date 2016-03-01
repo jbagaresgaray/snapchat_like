@@ -40,7 +40,10 @@ angular.module('starter.controllers', [])
         $scope.chat = Chats.get($stateParams.chatId);
     })
     .controller('AccountCtrl', function($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
+        var tapEnabled = false;
+        var dragEnabled = false;
+        var toBack = false;
+        if (window.cordova && window.cordova.plugins) {
+            cordova.plugins.camerapreview.startCamera({ x: 200, y: 0, width: 300, height: 500 }, "front", tapEnabled, dragEnabled, toBack);
+        }
     });

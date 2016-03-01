@@ -21,16 +21,18 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
+    "cordova-plugin-camera",
     {
-      "locator": "https://github.com/performanceactive/phonegap-custom-camera-plugin.git",
-      "id": "com.performanceactive.plugins.camera"
-    },
-    {
-      "locator": "https://github.com/wkevina/okstate-plugin-camera-overlay.git",
-      "id": "okstate-plugin-camera-overlay"
+      "locator": "https://github.com/mbppower/CordovaCameraPreview.git",
+      "id": "com.mbppower.camerapreview"
     }
   ],
   "cordovaPlatforms": [
-    "android"
+    "android",
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    }
   ]
 }
