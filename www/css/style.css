@@ -1,1 +1,46 @@
 /* Empty. Add your own CSS if you like */
+
+.pane2 {
+  background-color: transparent;
+  background-image: url('../img/bg.png');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  background-repeat: repeat;
+}
+
+
+/*.pane2:before {
+  background-color: rgba(255, 255, 255, 0.6);
+}*/
+
+.chat {
+  color: #333;
+  text-align: center;
+  font-family: sans-serif;
+  background-color: transparent;
+  background-image: url('../img/background.png');
+  background-repeat: repeat;
+  background-size: cover;
+}
+
+.chat .block {
+  padding: .25rem 0;
+  margin: .25rem 0;
+  background: #00ccff;
+  border: 1px solid #111;
+  border-radius: 3px;
+}
+
+.chat button {
+  background: gray: color: #333;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  margin: .25rem;
+}
+
+.chat .pictures {}
+
+.chat .controls {
+  margin-top: 100%;
+}
