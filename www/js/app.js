@@ -13,12 +13,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             }
         });
     })
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+
+        $ionicConfigProvider.backButton.previousTitleText(true);
+
         $stateProvider
             .state('login', {
                 url: '/login',
                 templateUrl: 'templates/login.html',
                 controller: 'LoginCtrl'
+            })
+            .state('signup', {
+                url: '/signup',
+                templateUrl: 'templates/signup.html',
+                controller: ''
             })
             .state('dash', {
                 url: '/dash',
@@ -42,7 +50,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             });
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/dash');
+        $urlRouterProvider.otherwise('/account');
 
     })
     .directive('errSrc', function() {

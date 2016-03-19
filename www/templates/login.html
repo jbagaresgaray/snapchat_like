@@ -1,14 +1,23 @@
-<ion-view view-title="Login">
-    <ion-content>
-        <ion-list>
-            <ion-item class="item">
-                <button class="button button-block button-positive" ng-click="takepic()">
-                    Camera
-                </button>
-            </ion-item>
-            <ion-item class="item item-image">
-                <img ng-src="{{imagePath}}" err-src="img/max.png">
-            </ion-item>
-        </ion-list>
+<ion-view view-title="" hide-nav-bar="true">
+    <ion-content class="has-header">
+        <h2 class="text-center royal">Log In</h2>
+        <div class="list padding-top">
+            <label class="item item-input">
+                <input type="text" placeholder="First Name">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Last Name">
+            </label>
+        </div>
+        <div class="padding text-center text-underline">
+            <button class="button button-clear button-small button-positive">
+                Forgot your password?
+            </button>
+        </div>
     </ion-content>
+    <div class="sticky-footer">
+        <button class="button button-full button-balanced login-button" ui-sref="dash">
+            Log in
+        </button>
+    </div>
 </ion-view>
