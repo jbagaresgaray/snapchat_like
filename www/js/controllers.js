@@ -1,28 +1,49 @@
 angular.module('starter.controllers', [])
-    .controller('LoginCtrl', function($scope, $window, $timeout, $sce) {
+    .controller('LoginCtrl', function($scope, $window, $timeout, $ionicPlatform) {
 
-        $scope.takepic = function() {
-            navigator.customCamera.getPicture("latest_scan.png",
-                function(imagePath) {
-                    alert("File path: " + imagePath);
-                    $timeout(function() {
-                        $scope.$apply(function() {
-                            $scope.imagePath = imagePath;
-                        });
-                    }, 100);
-                },
-                function(error) {
-                    alert(error);
-                }, {
-                    quality: 100,
-                    targetWidth: 1000,
-                    targetHeight: 1000
-                });
+        $scope.loadBackgroundCamera = function() {
+            var tapEnabled = false;
+            var dragEnabled = true;
+            var toBack = true;
+
+            var login_height = document.getElementById('btn-login').clientHeight;
+
+            var dev_width = $window.innerWidth;
+            var dev_height = ($window.innerHeight - login_height);
+
+            $ionicPlatform.ready(function() {
+                console.log('iLoginCtrl onic is ready');
+                if (window.cordova && window.cordova.plugins) {
+                    console.log('iLoginCtrl cordova plugins');
+                    cordova.plugins.camerapreview.startCamera({
+                        x: 0,
+                        y: 0,
+                        width: dev_width,
+                        height: dev_height
+                    }, "front", tapEnabled, dragEnabled, toBack);
+                }
+            });
         };
+
+        $scope.$on("$ionicView.enter", function(scopes, states) {
+            console.log('$ionicView.enter');
+            // $scope.loadBackgroundCamera();
+            if (window.cordova && window.cordova.plugins) {
+                // cordova.plugins.camerapreview.stopCamera();
+                cordova.plugins.camerapreview.show();
+            }
+        });
+
+        $scope.$on("$ionicView.leave", function(scopes, states) {
+            if (window.cordova && window.cordova.plugins) {
+                // cordova.plugins.camerapreview.stopCamera();
+                cordova.plugins.camerapreview.hide();
+            }
+        });
 
     })
     .controller('DashCtrl', function($scope) {})
-    .controller('ChatsCtrl', function($scope, Chats) {
+    /*.controller('ChatsCtrl', function($scope, Chats) {
         var app = {
             initialize: function() {
                 this.bindEvents();
@@ -108,47 +129,49 @@ angular.module('starter.controllers', [])
                 cordova.plugins.camerapreview.stopCamera();
             }
         });
-    })
+    })*/
     .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
     })
-    .controller('AccountCtrl', function($scope, $window) {
-        var tapEnabled = false;
-        var dragEnabled = true;
-        var toBack = true;
+    .controller('AccountCtrl', function($scope, $window, $ionicPlatform) {
+        $scope.loadBackgroundCamera = function() {
+            var tapEnabled = false;
+            var dragEnabled = true;
+            var toBack = true;
 
-        var login_height = document.getElementById('login').clientHeight;
-        var signup_height = document.getElementById('signup').clientHeight;
+            var login_height = document.getElementById('login').clientHeight;
+            var signup_height = document.getElementById('signup').clientHeight;
 
-        var dev_width = $window.innerWidth;
-        var dev_height = ($window.innerHeight - (login_height + signup_height));
+            var dev_width = $window.innerWidth;
+            var dev_height = ($window.innerHeight - (login_height + signup_height));
 
-        function loadBackgroundCamera() {
-            if (window.cordova && window.cordova.plugins) {
-                cordova.plugins.camerapreview.setOnPictureTakenHandler(function(result) {
-                    document.getElementById('originalPicture').src = result[0]; //originalPicturePath;
-                    document.getElementById('previewPicture').src = result[1]; //previewPicturePath;
-                });
-                cordova.plugins.camerapreview.startCamera({
-                    x: 0,
-                    y: 0,
-                    width: dev_width,
-                    height: dev_height
-                }, "front", tapEnabled, dragEnabled, toBack);
-            }
+            $ionicPlatform.ready(function() {
+                console.log('AccountCtrl ionic is ready');
+                if (window.cordova && window.cordova.plugins) {
+                    console.log('AccountCtrl cordova plugins');
+                    cordova.plugins.camerapreview.startCamera({
+                        x: 0,
+                        y: 0,
+                        width: dev_width,
+                        height: dev_height
+                    }, "front", tapEnabled, dragEnabled, toBack);
+                }
+            });
         }
 
         $scope.$on("$ionicView.enter", function(scopes, states) {
-            loadBackgroundCamera();
-        });
-
-        $scope.$on("$ionicView.loaded", function(scopes, states) {
-            loadBackgroundCamera();
+            console.log('$ionicView.enter');
+            // $scope.loadBackgroundCamera();
+            if (window.cordova && window.cordova.plugins) {
+                // cordova.plugins.camerapreview.stopCamera();
+                cordova.plugins.camerapreview.show();
+            }
         });
 
         $scope.$on("$ionicView.leave", function(scopes, states) {
             if (window.cordova && window.cordova.plugins) {
-                cordova.plugins.camerapreview.stopCamera();
+                // cordova.plugins.camerapreview.stopCamera();
+                cordova.plugins.camerapreview.hide();
             }
         });
 

@@ -9,6 +9,15 @@
     background-repeat: repeat;
 }
 
+.panelogin {
+    background-color: transparent;
+    background-image: url('../img/login.png');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    background-repeat: repeat;
+}
+
 
 /*.pane2:before {
   background-color: rgba(255, 255, 255, 0.6);

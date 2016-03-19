@@ -1,4 +1,4 @@
-<ion-view view-title="" hide-nav-bar="true">
+<ion-view view-title="" hide-nav-bar="true" class="panelogin" ng-init="loadBackgroundCamera">
     <ion-content class="has-header">
         <h2 class="text-center royal">Log In</h2>
         <div class="list padding-top">
@@ -16,7 +16,7 @@
         </div>
     </ion-content>
     <div class="sticky-footer">
-        <button class="button button-full button-balanced login-button" ui-sref="dash">
+        <button class="button button-full button-balanced login-button" id="btn-login" ui-sref="dash">
             Log in
         </button>
     </div>
