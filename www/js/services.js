@@ -1,4 +1,16 @@
 angular.module('starter.services', [])
+    .factory('netWorkFactory', function($http) {
+        return {
+            getIPAddress: function() {
+                return $http.get('http://ipv4.myexternalip.com/json').then(function(result) {
+                    console.log('result: ', result.data);
+                    return result.data;
+                }, function(e) {
+                    console.log('getIPAddress Err: ', e);
+                });
+            }
+        };
+    })
     .factory('Chats', function() {
         // Might use a resource here that returns a JSON array
 
@@ -47,9 +59,16 @@ angular.module('starter.services', [])
             }
         };
     })
-    .factory('MediaCustom',['$window',function($window){
+    .factory('MediaCustom', ['$window', function($window) {
         console.log('MediaCustom');
-        if($window.MediaCustom){
+        if ($window.MediaCustom) {
             return $window.MediaCustom;
-        }      
-    }]);
+        }
+    }])
+    .factory('appSocket', function(socketFactory, API_URL) {
+        var myIoSocket = io.connect(API_URL);
+        var socket = socketFactory({
+            ioSocket: myIoSocket
+        });
+        return socket;
+    });

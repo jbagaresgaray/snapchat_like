@@ -7,8 +7,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
     .constant('API_URL', 'http://localhost:3001')
     // .constant('API_URL', 'http://wifi-self-healing.herokuapp.com/') // PRODUCTION
     .constant('API_VERSION', '/api/1.0/')
-    .run(function($rootScope, $ionicPlatform, API_URL, $cordovaNetwork, $cordovaDevice, $cordovaGeolocation) {
+    .run(function($rootScope, $ionicPlatform, API_URL, $cordovaNetwork, $cordovaDevice, $cordovaGeolocation, netWorkFactory, appSocket, $interval) {
         $rootScope.item = {};
+        var promise;
+        var startTime;
 
         $ionicPlatform.ready(function() {
             if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -20,34 +22,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
                 StatusBar.styleDefault();
             }
 
-            if (!window.socketIo) {
-                window.socketIo = window.io.connect(API_URL + '/?token=null');
-            } else {
-                window.io.disconnect();
-                window.socketIo = window.io.connect(API_URL + '/?token=null');
-            }
-
             $rootScope.online = $cordovaNetwork.isOnline();
-
-
-            var posOptions = { timeout: 10000, enableHighAccuracy: false };
-            $cordovaGeolocation
-                .getCurrentPosition(posOptions)
-                .then(function(position) {
-                    $rootScope.item.latitude = position.coords.latitude
-                    $rootScope.item.longitude = position.coords.longitude
-                }, function(err) {
-                    console.log('error $cordovaGeolocation: ', err);
-                });
-
-            window.MacAddress.getMacAddress(
-                function(macAddress) {
-                    $rootScope.item.macAddress = macAddress;
-                },
-                function(error) {
-                    console.log('device MacAddress err: ', error);
-                }
-            );
 
             $rootScope.item.device = $cordovaDevice.getName();
             $rootScope.item.model = $cordovaDevice.getModel();
@@ -56,37 +31,79 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
             $rootScope.item.manufacturer = $cordovaDevice.getManufacturer();
             $rootScope.item.version = $cordovaDevice.getVersion();
 
-            console.log('run $scope.item: ', $rootScope.item);
-            socketIo.emit('socket', $scope.item);
+            if (window.MacAddress) {
+                window.MacAddress.getMacAddress(
+                    function(macAddress) {
+                        $rootScope.item.macAddress = macAddress;
+                    },
+                    function(error) {
+                        console.log('device MacAddress err: ', error);
+                    }
+                );
+            } else {
+                $rootScope.item.macAddress = '';
+            }
 
-            $rootScope.$on('$cordovaNetwork:online', function(event, networkState) {
-                var onlineState = networkState;
-
-                $rootScope.$apply(function() {
-                    $rootScope.online = true;
-                    $rootScope.item.online = true;
-                    socketIo.emit('networkState', $rootScope.item);
+            if (window.networkinterface) {
+                networkinterface.getIPAddress(function(ipAddress) {
+                    $scope.item.ipAddress = ipAddress || '';
+                }, function(error) {
+                    console.log('device ipAddress err: ', error);
                 });
-
-            });
-
-            // listen for Offline event
-            $rootScope.$on('$cordovaNetwork:offline', function(event, networkState) {
-                var offlineState = networkState;
-
-                $rootScope.$apply(function() {
-                    $rootScope.online = false;
-                    $rootScope.item.online = false;
-                    socketIo.emit('networkState', $rootScope.item);
-                    socketIo.emit('networkState', $rootScope.item);
+            } else {
+                netWorkFactory.getIPAddress().then(function(data) {
+                    $rootScope.item.ipAddress = data.ip;
                 });
+            }
+
+            var posOptions = { timeout: 10000, enableHighAccuracy: false };
+            $cordovaGeolocation
+                .getCurrentPosition(posOptions)
+                .then(function(position) {
+                    $rootScope.item.latitude = position.coords.latitude
+                    $rootScope.item.longitude = position.coords.longitude
+
+                    console.log('device: ', $rootScope.item);
+
+                    appSocket.emit('socket', $rootScope.item);
+                }, function(err) {
+                    console.log('error $cordovaGeolocation: ', err);
+                });
+        });
+
+        $rootScope.$on('$cordovaNetwork:online', function(event, networkState) {
+            var onlineState = networkState;
+
+            $rootScope.$apply(function() {
+                $rootScope.online = true;
+                $rootScope.item.online = true;
+
+                appSocket.emit('networkState', $rootScope.item);
             });
 
+        });
 
-            socketIo.on('server:response',function(response){
-                console.log('server:response after ping: ', response);
-                socketIo.emit('device:ping', $rootScope.item);
+        $rootScope.$on('$cordovaNetwork:offline', function(event, networkState) {
+            var offlineState = networkState;
+
+            $rootScope.$apply(function() {
+                $rootScope.online = false;
+                $rootScope.item.online = false;
+
+                appSocket.emit('networkState', $rootScope.item);
             });
+        });
+
+        promise = $interval(function() {
+            startTime = Date.now();
+            console.log('device:ping:send');
+            $rootScope.item.startTime = startTime;
+            appSocket.emit('device:ping:send', $rootScope.item);
+        }, 3000);
+
+
+        appSocket.on('device:ping:send', function(device) {
+            console.log('device ping: ', device);
         });
     })
     .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -126,7 +143,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
             });
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/dash');
+        $urlRouterProvider.otherwise('/account');
 
     })
     .directive('errSrc', function() {
