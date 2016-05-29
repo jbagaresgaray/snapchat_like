@@ -4,13 +4,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
         'btford.socket-io',
         'ngCordova'
     ])
-    .constant('API_URL', 'http://localhost:3001')
-    // .constant('API_URL', 'http://wifi-self-healing.herokuapp.com/') // PRODUCTION
+    // .constant('API_URL', 'http://localhost:3001')
+    .constant('API_URL', 'http://wifi-self-healing.herokuapp.com/') // PRODUCTION
     .constant('API_VERSION', '/api/1.0/')
     .run(function($rootScope, $ionicPlatform, API_URL, $cordovaNetwork, $cordovaDevice, $cordovaGeolocation, netWorkFactory, appSocket, $interval) {
-        $rootScope.item = {};
-        var promise;
-        var startTime;
 
         $ionicPlatform.ready(function() {
             if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -21,54 +18,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
             if (window.StatusBar) {
                 StatusBar.styleDefault();
             }
-
-            $rootScope.online = $cordovaNetwork.isOnline();
-
-            $rootScope.item.device = $cordovaDevice.getName();
-            $rootScope.item.model = $cordovaDevice.getModel();
-            $rootScope.item.platform = $cordovaDevice.getPlatform();
-            $rootScope.item.deviceId = $cordovaDevice.getUUID();
-            $rootScope.item.manufacturer = $cordovaDevice.getManufacturer();
-            $rootScope.item.version = $cordovaDevice.getVersion();
-
-            if (window.MacAddress) {
-                window.MacAddress.getMacAddress(
-                    function(macAddress) {
-                        $rootScope.item.macAddress = macAddress;
-                    },
-                    function(error) {
-                        console.log('device MacAddress err: ', error);
-                    }
-                );
-            } else {
-                $rootScope.item.macAddress = '';
-            }
-
-            if (window.networkinterface) {
-                networkinterface.getIPAddress(function(ipAddress) {
-                    $scope.item.ipAddress = ipAddress || '';
-                }, function(error) {
-                    console.log('device ipAddress err: ', error);
-                });
-            } else {
-                netWorkFactory.getIPAddress().then(function(data) {
-                    $rootScope.item.ipAddress = data.ip;
-                });
-            }
-
-            var posOptions = { timeout: 10000, enableHighAccuracy: false };
-            $cordovaGeolocation
-                .getCurrentPosition(posOptions)
-                .then(function(position) {
-                    $rootScope.item.latitude = position.coords.latitude
-                    $rootScope.item.longitude = position.coords.longitude
-
-                    console.log('device: ', $rootScope.item);
-
-                    appSocket.emit('socket', $rootScope.item);
-                }, function(err) {
-                    console.log('error $cordovaGeolocation: ', err);
-                });
         });
 
         $rootScope.$on('$cordovaNetwork:online', function(event, networkState) {
@@ -92,18 +41,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services',
 
                 appSocket.emit('networkState', $rootScope.item);
             });
-        });
-
-        promise = $interval(function() {
-            startTime = Date.now();
-            console.log('device:ping:send');
-            $rootScope.item.startTime = startTime;
-            appSocket.emit('device:ping:send', $rootScope.item);
-        }, 3000);
-
-
-        appSocket.on('device:ping:send', function(device) {
-            console.log('device ping: ', device);
         });
     })
     .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {

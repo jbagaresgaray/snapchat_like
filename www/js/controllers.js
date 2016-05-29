@@ -42,7 +42,10 @@ angular.module('starter.controllers', [])
         });
 
     })
-    .controller('DashCtrl', function($scope, $cordovaDevice, $cordovaGeolocation,netWorkFactory) {
+    .controller('DashCtrl', function($scope, $cordovaDevice, $cordovaGeolocation, netWorkFactory, $interval, appSocket) {
+        var promise;
+        var startTime;
+
         $scope.$on("$ionicView.enter", function(scopes, states) {
             console.log('$ionicView.enter');
 
@@ -64,7 +67,7 @@ angular.module('starter.controllers', [])
                         console.log('device MacAddress err: ', error);
                     }
                 );
-            }else{
+            } else {
                 $scope.item.macAddress = '';
             }
 
@@ -74,8 +77,8 @@ angular.module('starter.controllers', [])
                 }, function(error) {
                     console.log('device ipAddress err: ', error);
                 });
-            }else{
-                netWorkFactory.getIPAddress().then(function(data){
+            } else {
+                netWorkFactory.getIPAddress().then(function(data) {
                     $scope.item.ipAddress = data.ip;
                 });
             }
@@ -95,9 +98,19 @@ angular.module('starter.controllers', [])
         });
 
 
+        promise = $interval(function() {
+            startTime = Date.now();
+
+            console.log('device:ping:send');
+
+            $scope.item.startTime = startTime;
+            appSocket.emit('device:ping:send', $scope.item);
+        }, 3000);
+
+
         $scope.$on("$ionicView.leave", function(scopes, states) {
             console.log('$ionicView.leave - socket: disconnect')
-            appSocket.emit('disconnect',$scope.item);
+            appSocket.emit('disconnect');
         });
 
     })
