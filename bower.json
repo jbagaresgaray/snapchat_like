@@ -3,5 +3,10 @@
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4"
+  },
+  "dependencies": {
+    "socket.io-client": "^1.4.6",
+    "angular-socket-io": "^0.7.0",
+    "ngCordova": "^0.1.26-alpha"
   }
 }

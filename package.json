@@ -25,7 +25,11 @@
     {
       "locator": "https://github.com/mbppower/CordovaCameraPreview.git",
       "id": "com.mbppower.camerapreview"
-    }
+    },
+    "cordova-plugin-geolocation",
+    "cordova-plugin-network-information",
+    "com-badrit-macaddress",
+    "cordova-plugin-networkinterface"
   ],
   "cordovaPlatforms": [
     {

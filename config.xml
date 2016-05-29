@@ -71,4 +71,9 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
     <plugin name="com.mbppower.camerapreview" spec="https://github.com/mbppower/CordovaCameraPreview.git" />
+    <plugin name="cordova-plugin-device" spec="~1.1.2" />
+    <plugin name="cordova-plugin-geolocation" spec="~2.1.0" />
+    <plugin name="cordova-plugin-network-information" spec="~1.2.1" />
+    <plugin name="com-badrit-macaddress" spec="~0.2.0" />
+    <plugin name="cordova-plugin-networkinterface" spec="~1.0.8" />
 </widget>

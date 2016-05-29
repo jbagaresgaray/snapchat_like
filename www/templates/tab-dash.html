@@ -1,5 +1,49 @@
-<ion-view view-title="" hide-nav-bar="true">
+<ion-view view-title="Device Information">
     <ion-content>
-        <h1> Camera View here</h1>
+        <div class="list">
+            <div class="item item-divider">
+                Device Name
+            </div>
+            <div class="item">
+                {{item.device}}
+            </div>
+            <div class="item item-divider">
+                Model
+            </div>
+            <div class="item">
+                {{item.model}}
+            </div>
+            <div class="item item-divider">
+                Device ID
+            </div>
+            <div class="item">
+                {{item.deviceId}}
+            </div>
+            <div class="item item-divider">
+                Device Version
+            </div>
+            <div class="item">
+                {{item.version}}
+            </div>
+            <div class="item item-divider">
+                Manufacturer
+            </div>
+            <div class="item">
+                {{item.manufacturer}}
+            </div>
+            <div class="item item-divider">
+                Platform
+            </div>
+            <div class="item">
+                {{item.platform}}
+            </div>            
+            <div class="item item-divider">
+                Current Location
+            </div>
+            <div class="item">
+                <b>Lat:</b> {{item.latitude}} <br>
+                <b>Lng:</b> {{item.longitude}}
+            </div>
+        </div>
     </ion-content>
 </ion-view>
