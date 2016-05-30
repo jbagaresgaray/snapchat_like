@@ -38,8 +38,8 @@ angular.module('starter.controllers', [])
             if (window.cordova && window.cordova.plugins) {
                 // cordova.plugins.camerapreview.stopCamera();
                 cordova.plugins.camerapreview.hide();
-            }
-        });
+            }});
+
 
     })
     .controller('DashCtrl', function($scope, $cordovaDevice, $cordovaGeolocation, netWorkFactory, $interval, appSocket) {
@@ -51,12 +51,16 @@ angular.module('starter.controllers', [])
 
             $scope.item = {};
 
+            appSocket.on('connect', function(){console.log('Device connected')});
+            appSocket.connect();
+
             $scope.item.device = $cordovaDevice.getName();
             $scope.item.model = $cordovaDevice.getModel();
             $scope.item.platform = $cordovaDevice.getPlatform();
             $scope.item.deviceId = $cordovaDevice.getUUID();
             $scope.item.manufacturer = $cordovaDevice.getManufacturer();
             $scope.item.version = $cordovaDevice.getVersion();
+            $scope.item.online = true;
 
             if (window.MacAddress) {
                 window.MacAddress.getMacAddress(
@@ -95,22 +99,29 @@ angular.module('starter.controllers', [])
                 }, function(err) {
                     console.log('error $cordovaGeolocation: ', err);
                 });
+
+
+                promise = $interval(function() {
+                    startTime = Date.now();
+
+                    console.log('device:ping:send');
+
+                    $scope.item.startTime = startTime;
+                    appSocket.emit('device:ping:send', $scope.item);
+                }, 3000);
+
         });
 
-
-        promise = $interval(function() {
-            startTime = Date.now();
-
-            console.log('device:ping:send');
-
-            $scope.item.startTime = startTime;
-            appSocket.emit('device:ping:send', $scope.item);
-        }, 3000);
-
-
         $scope.$on("$ionicView.leave", function(scopes, states) {
-            console.log('$ionicView.leave - socket: disconnect')
-            appSocket.emit('disconnect');
+            console.log('$ionicView.leave - socket: disconnect');
+
+            $interval.cancel(promise);
+
+            $scope.item.online = false;
+
+            appSocket.removeListener('device:ping:send');
+            appSocket.emit('device:ping:stop',$scope.item);
+            appSocket.emit('forceDisconnect',$scope.item);
         });
 
     })
