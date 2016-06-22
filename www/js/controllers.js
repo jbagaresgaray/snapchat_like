@@ -94,8 +94,8 @@ angular.module('starter.controllers', [])
                     $scope.item.latitude = position.coords.latitude
                     $scope.item.longitude = position.coords.longitude
 
-                    appSocket.emit('socket', $scope.item);
-                    console.log('device: ', $scope.item);
+                    appSocket.emit('socket', JSON.stringify($scope.item));
+                    console.log('device: ', JSON.stringify($scope.item));
                 }, function(err) {
                     console.log('error $cordovaGeolocation: ', err);
                 });
@@ -103,11 +103,8 @@ angular.module('starter.controllers', [])
 
                 promise = $interval(function() {
                     startTime = Date.now();
-
-                    console.log('device:ping:send');
-
                     $scope.item.startTime = startTime;
-                    appSocket.emit('device:ping:send', $scope.item);
+                    appSocket.emit('device:ping:send', JSON.stringify($scope.item));
                 }, 3000);
 
         });
@@ -120,8 +117,8 @@ angular.module('starter.controllers', [])
             $scope.item.online = false;
 
             appSocket.removeListener('device:ping:send');
-            appSocket.emit('device:ping:stop',$scope.item);
-            appSocket.emit('forceDisconnect',$scope.item);
+            appSocket.emit('device:ping:stop',JSON.stringify($scope.item));
+            appSocket.emit('forceDisconnect',JSON.stringify($scope.item));
         });
 
     })
